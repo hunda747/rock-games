@@ -1,0 +1,22 @@
+.detailCampaign {
+  padding-left: 2rem;
+}
+
+.detailCampaign table td {
+  /* display: none; */
+  padding: 6px 15px;
+}
+
+.detailCampaign textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  font-size: 18px;
+  resize: none;
+}
+.detailCampaign .actions {
+  display: flex;
+  justify-content: right;
+  gap: 1rem;
+  padding: 1rem;
+}

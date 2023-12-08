@@ -1,0 +1,1 @@
+[{campaignId: 1302, title: 'Teck Softwate', shortDescription: 'we are short on cash for a T.G.I.F: an epic friday night', city: 'Addis Ababa', imageUrl: 'http://res.cloudinary.com/do394twgw/image/upload/v1681300797/jnpb9tlrsmxpqhdiozts.webp', …}]

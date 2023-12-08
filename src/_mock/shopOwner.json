@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "fname": "John",
+    "lname": "Doe",
+    "username": "johndoe",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "fname": "Jane",
+    "lname": "Smith",
+    "username": "janesmith",
+    "status": "inactive"
+  },
+  {
+    "id": 3,
+    "fname": "Bob",
+    "lname": "Johnson",
+    "username": "bobjohnson",
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "fname": "Alice",
+    "lname": "Williams",
+    "username": "alicewilliams",
+    "status": "inactive"
+  }
+]
