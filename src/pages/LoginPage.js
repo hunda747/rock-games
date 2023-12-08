@@ -8,6 +8,7 @@ import {
   Divider,
   Stack,
   Button,
+  Box,
 } from "@mui/material";
 // hooks
 import useResponsive from "../hooks/useResponsive";
@@ -16,7 +17,7 @@ import Logo from "../components/logo";
 import Iconify from "../components/iconify";
 // sections
 import { LoginForm } from "../sections/auth/login";
-
+import rockLogo from "../assets/rockLogo.png"
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled("div")(({ theme }) => ({
@@ -57,7 +58,7 @@ export default function LoginPage() {
       </Helmet>
 
       <StyledRoot>
-        <Logo
+        {/* <Logo
           sx={{
             position: "fixed",
             top: { xs: 16, sm: 24, md: 40 },
@@ -75,10 +76,14 @@ export default function LoginPage() {
               alt="login"
             />
           </StyledSection>
-        )}
+        )} */}
 
         <Container maxWidth="sm">
           <StyledContent>
+            <Box sx={{ px: 2.5, py: 3, display: "flex", justifyContent: 'center', alignItems: 'center' }}>
+              {/* <Logo /> */}
+              <img src={rockLogo} alt="logo" height={'100px'} width={'auto'} />
+            </Box>
             <LoginForm />
           </StyledContent>
         </Container>

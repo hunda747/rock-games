@@ -14,6 +14,7 @@ import DetailCampaignPage from "./pages/DetailCampaignPage";
 import UserAuth from "./hooks/userAut";
 import FundingCampaignPage from "./pages/fundingCampaignsPage";
 import ManageShopOwner from "./pages/Manage/ManageShopOwner";
+import RetailReport from "./pages/Report/RetailReport";
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +25,7 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: "app", element: <DashboardAppPage /> },
+        { path: "app", element: <RetailReport /> },
         { path: "manageShopOwner", element: <ManageShopOwner /> },
         { path: "user", element: <UserPage /> },
         { path: "campaign", element: <CampaignPage /> },
