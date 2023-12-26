@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button, Container, Grid, Typography, useTheme, Card,
   Table,
@@ -30,7 +30,8 @@ import EditShopOwner from "../../dialogBoxs/EditShopOwner";
 import ChangeOwnerPassword from "../../dialogBoxs/ChangeOwnerPassword";
 // mock
 import USERLIST from "../../_mock/user";
-import OWNERLIST from '../../_mock/shopOwner.json';
+import { axiosInstance } from "../../App";
+// import OWNERLIST from '../../_mock/shopOwner.json';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -81,6 +82,15 @@ export default function ManageShopOwner(params) {
   const [openPassword, setOpenPassword] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openEditData, setOpenEditData] = useState({});
+  const [OWNERLIST, setOWNERLIST] = useState([]);
+
+  const loadOwnerList = async() => {
+    const resp = await axiosInstance.get(`/shop-owners`)
+    setOWNERLIST(resp.data)
+  }
+  useEffect(() => {
+    loadOwnerList()
+  }, [])
 
   const handleOpenPassword = () => {
     setOpenPassword(true);
@@ -338,7 +348,7 @@ export default function ManageShopOwner(params) {
           />
         </Card>
       </Container>
-      <AddShopOwner open={open} setOpen={setOpen} />
+      <AddShopOwner open={open} setOpen={setOpen} reloadData={loadOwnerList}/>
       {openPassword && <ChangeOwnerPassword open={openPassword} setOpen={setOpenPassword} />}
       {
         openEdit && <EditShopOwner open={openEdit} setOpen={setOpenEdit} editItem={openEditData} />

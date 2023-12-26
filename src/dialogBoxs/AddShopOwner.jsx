@@ -6,8 +6,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { axiosInstance } from "../App";
 
-const AddShopOwner = ({ open, setOpen }) => {
+const AddShopOwner = ({ open, setOpen, reloadData }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -28,7 +29,7 @@ const AddShopOwner = ({ open, setOpen }) => {
     confirmPassword: false,
   });
 
-  const handleSave = () => {
+  const handleSave = async() => {
     // Validate required fields
     const requiredFields = [
       "fname",
@@ -64,6 +65,14 @@ const AddShopOwner = ({ open, setOpen }) => {
 
     // Add your logic to handle the form data (e.g., send to an API)
     console.log(formData);
+    try{
+      await axiosInstance.post(`shop-owners`, formData)
+      await reloadData()
+      
+    }catch(err){
+      setError(newError);
+      return;
+    }
     handleClose();
   };
 

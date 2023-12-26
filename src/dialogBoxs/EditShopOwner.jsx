@@ -7,6 +7,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { MenuItem, Select } from "@mui/material";
+import { axiosInstance } from "../App";
 
 const EditShopOwner = ({ open, setOpen, editItem }) => {
   const handleClose = () => {
@@ -28,7 +29,7 @@ const EditShopOwner = ({ open, setOpen, editItem }) => {
     username: false,
   });
 
-  const handleSave = () => {
+  const handleSave = async() => {
     // Validate required fields
     const requiredFields = ["fname", "lastName", "username"];
     let isValid = true;
@@ -51,6 +52,7 @@ const EditShopOwner = ({ open, setOpen, editItem }) => {
 
     // Add your logic to handle the form data (e.g., send to an API)
     console.log(formData);
+ 
     handleClose();
   };
 

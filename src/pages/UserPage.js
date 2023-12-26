@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
 import { useState } from "react";
+
 // @mui
 import {
   Card,
@@ -22,6 +23,8 @@ import {
   TableContainer,
   TablePagination,
 } from "@mui/material";
+import { axiosInstance } from "../App";
+
 // components
 import Label from "../components/label";
 import Iconify from "../components/iconify";
@@ -161,6 +164,10 @@ export default function UserPage() {
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
+  const handleUserAdd = async(data) => {
+
+const resp = await axiosInstance.post(`/user`)
+  }
   return (
     <>
       <Helmet>
