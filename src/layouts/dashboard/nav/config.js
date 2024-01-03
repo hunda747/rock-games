@@ -18,7 +18,7 @@ const navConfig = [
   },
   {
     title: "Manage shops",
-    path: "/dashboard/user",
+    path: "/dashboard/manageShop",
     icon: icon("ic_user"),
   },
   {

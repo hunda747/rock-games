@@ -8,6 +8,7 @@ import { campaignState, campaignReducer } from "../../hooks/campaignContext";
 
 import Header from "./header";
 import Nav from "./nav";
+import ConfirmMessage from "../../components/SnackBarMessage/confirmMessage";
 
 export const CampaignContext = createContext("");
 
@@ -50,7 +51,7 @@ export default function DashboardLayout() {
     <CampaignContext.Provider value={{ data, dispatch }}>
       <StyledRoot>
         <Header onOpenNav={() => setOpen(true)} />
-
+        <ConfirmMessage />
         <Nav openNav={open} onCloseNav={() => setOpen(false)} />
 
         <Main>

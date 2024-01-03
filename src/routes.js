@@ -15,6 +15,7 @@ import UserAuth from "./hooks/userAut";
 import FundingCampaignPage from "./pages/fundingCampaignsPage";
 import ManageShopOwner from "./pages/Manage/ManageShopOwner";
 import RetailReport from "./pages/Report/RetailReport";
+import ManageShop from "./pages/Manage/ManageShop";
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: "app", element: <RetailReport /> },
         { path: "manageShopOwner", element: <ManageShopOwner /> },
+        { path: "manageShop", element: <ManageShop /> },
         { path: "user", element: <UserPage /> },
         { path: "campaign", element: <CampaignPage /> },
         { path: "fundingCampaign", element: <FundingCampaignPage /> },

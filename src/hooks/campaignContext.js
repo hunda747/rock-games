@@ -25,11 +25,22 @@ export const campaignState = {
 
   campaings: [],
   loading: false,
+
+  showSnackBar: {
+    show: false,
+    message: "",
+    error: true,
+  },
 };
 
 export const campaignReducer = (state, action) => {
   switch (action.type) {
     /* Get all campaign */
+    case "setShowSnackBar":
+      return {
+        ...state,
+        showSnackBar: action?.payload,
+      };
     case "fetchCampaignsAndChangeState":
       return {
         ...state,

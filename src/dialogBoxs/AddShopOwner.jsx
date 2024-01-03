@@ -6,23 +6,24 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import axios from "axios";
 
-const AddShopOwner = ({ open, setOpen }) => {
+const localhost = process.env.REACT_APP_API_URL;
+
+const AddShopOwner = ({ open, setOpen, handleFetchData }) => {
   const handleClose = () => {
     setOpen(false);
   };
 
   const [formData, setFormData] = useState({
-    fname: "",
-    lastName: "",
+    name: "",
     username: "",
     password: "",
     confirmPassword: "",
   });
 
   const [error, setError] = useState({
-    fname: false,
-    lastName: false,
+    name: false,
     username: false,
     password: false,
     confirmPassword: false,
@@ -30,13 +31,7 @@ const AddShopOwner = ({ open, setOpen }) => {
 
   const handleSave = () => {
     // Validate required fields
-    const requiredFields = [
-      "fname",
-      "lastName",
-      "username",
-      "password",
-      "confirmPassword",
-    ];
+    const requiredFields = ["name", "username", "password", "confirmPassword"];
     let isValid = true;
     const newError = {};
 
@@ -63,6 +58,20 @@ const AddShopOwner = ({ open, setOpen }) => {
     }
 
     // Add your logic to handle the form data (e.g., send to an API)
+    axios
+      .post(`${localhost}/shop-owners`, {
+        name: formData.name,
+        username: formData.username,
+        password: formData.password,
+      })
+      .then((res) => {
+        console.log(res);
+        handleFetchData();
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     console.log(formData);
     handleClose();
   };
@@ -84,18 +93,9 @@ const AddShopOwner = ({ open, setOpen }) => {
           label="First Name"
           fullWidth
           variant="outlined"
-          value={formData.fname}
-          error={error.fname}
-          onChange={handleChange("fname")}
-        />
-        <TextField
-          margin="normal"
-          label="Last Name"
-          fullWidth
-          variant="outlined"
-          value={formData.lastName}
-          error={error.lastName}
-          onChange={handleChange("lastName")}
+          value={formData.name}
+          error={error.name}
+          onChange={handleChange("name")}
         />
         <TextField
           margin="normal"

@@ -1,4 +1,4 @@
-// EditShopOwner.jsx
+// AddShop.jsx
 import React, { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -6,32 +6,61 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { MenuItem, Select } from "@mui/material";
 import axios from "axios";
+import { MenuItem, Select } from "@mui/material";
 
 const localhost = process.env.REACT_APP_API_URL;
-const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
+
+const AddShop = ({ open, setOpen, handleFetchData }) => {
+  const [owner, setOwner] = useState([]);
   const handleClose = () => {
     setOpen(false);
   };
 
+  const handleFetchShopOwner = () => {
+    axios
+      .get(`${localhost}/shop-owners`)
+      .then((res) => {
+        console.log(res);
+        setOwner(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        // dispatch({
+        //   type: "setShowSnackBar",
+        //   payload: {
+        //     show: true,
+        //     message:
+        //       err?.response?.data?.message || err?.message || "Network Error",
+        //   },
+        // });
+      })
+      .finally(() => {
+        console.log("end");
+      });
+  };
+
   useEffect(() => {
-    console.log("effect");
-    setFormData(editItem);
+    handleFetchShopOwner();
   }, []);
 
-  const [formData, setFormData] = useState({});
-  console.log("initail", editItem);
-  console.log(formData);
+  const [formData, setFormData] = useState({
+    shopOwnerId: 0,
+    name: "",
+    location: "",
+    status: "",
+  });
 
   const [error, setError] = useState({
+    shopOwnerId: false,
     name: false,
-    username: false,
+    location: false,
+    status: false,
   });
 
   const handleSave = () => {
     // Validate required fields
-    const requiredFields = ["name", "username"];
+    const requiredFields = ["shopOwnerId", "name", "location"];
     let isValid = true;
     const newError = {};
 
@@ -52,9 +81,11 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
 
     // Add your logic to handle the form data (e.g., send to an API)
     axios
-      .put(`${localhost}/shop-owners/${editItem.id}`, {
+      .post(`${localhost}/shop`, {
         name: formData.name,
-        username: formData.username,
+        shopOwnerId: formData.shopOwnerId,
+        location: formData.location,
+        status: formData.status,
       })
       .then((res) => {
         console.log(res);
@@ -78,32 +109,48 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Edit Shop Owner</DialogTitle>
+      <DialogTitle>Add Shop Owner</DialogTitle>
       <DialogContent>
         {/* Form Fields */}
+        <p style={{ margin: "0 5px", fontSize: "12px" }}>Shop Owner</p>
+        <Select
+          fullWidth
+          defaultValue={0}
+          onChange={handleChange("shopOwnerId")}
+        >
+          <MenuItem value={0}>Choose Owner</MenuItem>
+          {owner.map((own) => (
+            <MenuItem value={own.id}>{own.name}</MenuItem>
+          ))}
+        </Select>
         <TextField
           margin="normal"
-          label="Name"
+          label="First Name"
           fullWidth
           variant="outlined"
           value={formData.name}
           error={error.name}
           onChange={handleChange("name")}
         />
+        <p style={{ margin: "0 5px", fontSize: "12px" }}>status</p>
+        <Select
+          fullWidth
+          defaultValue={"active"}
+          onChange={handleChange("status")}
+        >
+          <MenuItem value="active">active</MenuItem>
+          <MenuItem value="inactive">inactive</MenuItem>
+        </Select>
         <TextField
           margin="normal"
-          label="Username"
+          label="Location"
+          type="text"
           fullWidth
           variant="outlined"
-          value={formData.username}
-          error={error.username}
-          onChange={handleChange("username")}
+          value={formData.location}
+          error={error.location}
+          onChange={handleChange("location")}
         />
-        <p style={{ margin: "0 5px" }}>status</p>
-        <Select fullWidth defaultValue={"active"}>
-          <MenuItem value="active">activate</MenuItem>
-          <MenuItem value="active">diactivate</MenuItem>
-        </Select>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
@@ -117,4 +164,4 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
   );
 };
 
-export default EditShopOwner;
+export default AddShop;

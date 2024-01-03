@@ -26,16 +26,16 @@ import Scrollbar from "../../components/scrollbar";
 import Iconify from "../../components/iconify";
 import { AppWidgetSummary } from "../../sections/@dashboard/app";
 import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
-import EditShopOwner from "../../dialogBoxs/EditShopOwner";
-import EditShop from "../../dialogBoxs/shop/EditShop";
-import ChangeOwnerPassword from "../../dialogBoxs/ChangeOwnerPassword";
-import AddShop from "../../dialogBoxs/shop/AddShop";
 import AddShopOwner from "../../dialogBoxs/AddShopOwner";
+import EditShopOwner from "../../dialogBoxs/EditShopOwner";
+import ChangeOwnerPassword from "../../dialogBoxs/ChangeOwnerPassword";
 // mock
 import USERLIST from "../../_mock/user";
 import OWNERLIST from '../../_mock/shopOwner.json';
-import { getShopOwners } from "../../data/fetchShopOwner";
+import { getShop, getShopOwners } from "../../data/fetchShopOwner";
 import { CampaignContext } from "../../layouts/dashboard/DashboardLayout";
+import AddShop from "../../dialogBoxs/shop/AddShop";
+import EditShop from "../../dialogBoxs/shop/EditShop";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -71,8 +71,9 @@ function applySortFilter(array, comparator, query) {
 
 const TABLE_HEAD = [
   // { id: "id", label: "Id", alignRight: false },
-  { id: "fname", label: "Full name", alignRight: false },
-  { id: "username", label: "Username", alignRight: false },
+  { id: "name", label: "Name", alignRight: false },
+  { id: "location", label: "Location", alignRight: false },
+  { id: "owner", label: "Owner", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
   // { id: "isVerified", label: "Action", alignRight: false },
   // { id: "isVerifieffd", label: "Verified", alignRight: false },
@@ -80,7 +81,7 @@ const TABLE_HEAD = [
   { id: "", label: "Action", alignRight: false },
 ];
 
-export default function ManageShopOwner(params) {
+export default function ManageShop(params) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
@@ -114,7 +115,7 @@ export default function ManageShopOwner(params) {
     setOpenEdit(true);
   };
   const handleFetchData = () => {
-    getShopOwners(owner, setOwner, dispatch, setLoader);
+    getShop(owner, setOwner, dispatch, setLoader);
 
   }
   useEffect(() => {
@@ -205,11 +206,11 @@ export default function ManageShopOwner(params) {
       <Container maxWidth="xl">
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={1}>
           <Typography variant="h4" gutterBottom>
-            Manage Shop Owners
+            Manage Shop
           </Typography>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"
           />} onClick={handleOpen}>
-            New Shop Owner
+            New Shop
           </Button>
         </Stack>
 
@@ -241,7 +242,9 @@ export default function ManageShopOwner(params) {
                           const {
                             id,
                             name,
-                            username,
+                            location,
+                            status,
+                            owner,
                             // status,
                           } = row;
 
@@ -270,34 +273,21 @@ export default function ManageShopOwner(params) {
                                 </Stack>
                               </TableCell>
 
-                              <TableCell align="left">{username}</TableCell>
+                              <TableCell align="left">{location}</TableCell>
+                              <TableCell align="left">{owner?.name}</TableCell>
 
                               <TableCell align="left">
                                 <Label
                                   color={
-                                    ('status' === "inactive" && "error") || "success"
+                                    (status === "inactive" && "error") || "success"
                                   }
                                 >
-                                  {sentenceCase('status')}
+                                  {sentenceCase(status)}
                                 </Label>
                               </TableCell>
 
                               <TableCell align="left">
-                                <Grid container spacing={3} row rowGap={3}>
-                                  <Grid item xs={6}>
-                                    <Button variant="outlined" color="primary" fullWidth startIcon={<Https />} onClick={() => handleOpenPassword(id)}>change password</Button>
-                                  </Grid>
-                                  <Grid item xs={6}>
-                                    <Button variant="outlined" color="secondary" fullWidth startIcon={<Edit />} onClick={() => handleEdit(row)}>edit</Button>
-                                  </Grid>
-                                  {/* <Grid item xs={4}>
-                                    {'status' === "active" ? (
-                                      <Button variant="contained" color="error" fullWidth startIcon={<NotificationsOff />}>diactivate</Button>
-                                    ) : (
-                                      <Button variant="contained" color="success" fullWidth startIcon={<Notifications />}>activate</Button>
-                                    )}
-                                  </Grid> */}
-                                </Grid>
+                                <Button variant="outlined" color="secondary" fullWidth startIcon={<Edit />} onClick={() => handleEdit(row)}>edit</Button>
                               </TableCell>
                             </TableRow>
                           );
@@ -349,10 +339,10 @@ export default function ManageShopOwner(params) {
           />
         </Card>
       </Container>
-      <AddShopOwner open={open} setOpen={setOpen} handleFetchData={handleFetchData} />
+      <AddShop open={open} setOpen={setOpen} handleFetchData={handleFetchData} />
       {openPassword && <ChangeOwnerPassword open={openPassword} setOpen={setOpenPassword} id={openPasswordId} />}
       {
-        openEdit && <EditShopOwner open={openEdit} setOpen={setOpenEdit} editItem={openEditData} handleFetchData={handleFetchData} />
+        openEdit && <EditShop open={openEdit} setOpen={setOpenEdit} editItem={openEditData} handleFetchData={handleFetchData} />
       }
     </>
   );
