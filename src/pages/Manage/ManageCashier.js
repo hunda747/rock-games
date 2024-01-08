@@ -32,10 +32,12 @@ import ChangeOwnerPassword from "../../dialogBoxs/ChangeOwnerPassword";
 // mock
 import USERLIST from "../../_mock/user";
 import OWNERLIST from '../../_mock/shopOwner.json';
-import { getShop, getShopOwners } from "../../data/fetchShopOwner";
+import { getCashier } from "../../data/fetchShopOwner";
 import { CampaignContext } from "../../layouts/dashboard/DashboardLayout";
 import AddShop from "../../dialogBoxs/shop/AddShop";
 import EditShop from "../../dialogBoxs/shop/EditShop";
+import AddCashier from "../../dialogBoxs/cashier/AddCashier";
+import EditCashier from "../../dialogBoxs/cashier/EditCashier";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -72,16 +74,16 @@ function applySortFilter(array, comparator, query) {
 const TABLE_HEAD = [
   // { id: "id", label: "Id", alignRight: false },
   { id: "name", label: "Name", alignRight: false },
-  { id: "location", label: "Location", alignRight: false },
-  { id: "owner", label: "Owner", alignRight: false },
-  { id: "status", label: "Status", alignRight: false },
+  { id: "username", label: "Username", alignRight: false },
+  { id: "shop", label: "Shop", alignRight: false },
+  // { id: "owner", label: "Owner", alignRight: false },
   // { id: "isVerified", label: "Action", alignRight: false },
   // { id: "isVerifieffd", label: "Verified", alignRight: false },
-  // { id: "status", label: "Status", alignRight: false },
+  { id: "status", label: "Status", alignRight: false },
   { id: "", label: "Action", alignRight: false },
 ];
 
-export default function ManageShop(params) {
+export default function ManageCashier(params) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
@@ -115,8 +117,7 @@ export default function ManageShop(params) {
     setOpenEdit(true);
   };
   const handleFetchData = () => {
-    getShop(owner, setOwner, dispatch, setLoader);
-
+    getCashier(owner, setOwner, dispatch, setLoader);
   }
   useEffect(() => {
     handleFetchData();
@@ -213,11 +214,11 @@ export default function ManageShop(params) {
       <Container maxWidth="xl">
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={1}>
           <Typography variant="h4" gutterBottom>
-            Manage Shop
+            Manage Cashier
           </Typography>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"
           />} onClick={handleOpen}>
-            New Shop
+            New cashier
           </Button>
         </Stack>
 
@@ -249,10 +250,9 @@ export default function ManageShop(params) {
                           const {
                             id,
                             name,
-                            location,
+                            username,
+                            shop,
                             status,
-                            owner,
-                            // status,
                           } = row;
 
                           return (
@@ -280,8 +280,8 @@ export default function ManageShop(params) {
                                 </Stack>
                               </TableCell>
 
-                              <TableCell align="left">{location}</TableCell>
-                              <TableCell align="left">{owner?.name}</TableCell>
+                              <TableCell align="left">{username}</TableCell>
+                              <TableCell align="left">{shop?.name}</TableCell>
 
                               <TableCell align="left">
                                 <Label
@@ -289,7 +289,7 @@ export default function ManageShop(params) {
                                     (status === "inactive" && "error") || "success"
                                   }
                                 >
-                                  {sentenceCase(status)}
+                                  {sentenceCase(status ? "active" : "inactive")}
                                 </Label>
                               </TableCell>
 
@@ -366,10 +366,10 @@ export default function ManageShop(params) {
           />
         </Card>
       </Container>
-      <AddShop open={open} setOpen={setOpen} handleFetchData={handleFetchData} />
+      <AddCashier open={open} setOpen={setOpen} handleFetchData={handleFetchData} />
       {openPassword && <ChangeOwnerPassword open={openPassword} setOpen={setOpenPassword} id={openPasswordId} />}
       {
-        openEdit && <EditShop open={openEdit} setOpen={setOpenEdit} editItem={openEditData} handleFetchData={handleFetchData} />
+        openEdit && <EditCashier open={openEdit} setOpen={setOpenEdit} editItem={openEditData} handleFetchData={handleFetchData} />
       }
     </>
   );

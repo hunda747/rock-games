@@ -1,4 +1,4 @@
-// AddShop.jsx
+// AddCashier.jsx
 import React, { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -11,29 +11,21 @@ import { MenuItem, Select } from "@mui/material";
 
 const localhost = process.env.REACT_APP_API_URL;
 
-const AddShop = ({ open, setOpen, handleFetchData }) => {
+const AddCashier = ({ open, setOpen, handleFetchData }) => {
   const [owner, setOwner] = useState([]);
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleFetchShopOwner = () => {
+  const handleFetchShop = () => {
     axios
-      .get(`${localhost}/shop-owners`)
+      .get(`${localhost}/shop`)
       .then((res) => {
         console.log(res);
         setOwner(res.data);
       })
       .catch((err) => {
         console.log(err);
-        // dispatch({
-        //   type: "setShowSnackBar",
-        //   payload: {
-        //     show: true,
-        //     message:
-        //       err?.response?.data?.message || err?.message || "Network Error",
-        //   },
-        // });
       })
       .finally(() => {
         console.log("end");
@@ -41,29 +33,37 @@ const AddShop = ({ open, setOpen, handleFetchData }) => {
   };
 
   useEffect(() => {
-    handleFetchShopOwner();
+    handleFetchShop();
   }, []);
 
   const [formData, setFormData] = useState({
-    shopOwnerId: 0,
+    shopId: 0,
     name: "",
-    location: "",
-    status: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [error, setError] = useState({
-    shopOwnerId: false,
+    shopId: false,
     name: false,
-    location: false,
-    status: false,
+    username: false,
+    password: false,
+    confirmPassword: false,
   });
 
   const handleSave = () => {
+    console.log(formData);
     // Validate required fields
-    const requiredFields = ["shopOwnerId", "name", "location"];
+    const requiredFields = [
+      "shopId",
+      "name",
+      "username",
+      "password",
+      "confirmPassword",
+    ];
     let isValid = true;
     const newError = {};
-    console.log(formData.shopOwnerId);
     requiredFields.forEach((field) => {
       if (!formData[field]) {
         newError[field] = true;
@@ -72,29 +72,37 @@ const AddShop = ({ open, setOpen, handleFetchData }) => {
         newError[field] = false;
       }
     });
+    // Validate password and confirm password match
+    if (formData.password !== formData.confirmPassword) {
+      newError.password = true;
+      newError.confirmPassword = "password must match";
+      isValid = false;
+    }
+
+    console.log("savig", isValid);
+    console.log("savig", newError);
 
     // If there are validation errors, update the state and return
     if (!isValid) {
       setError(newError);
       return;
     }
-
     // Add your logic to handle the form data (e.g., send to an API)
     axios
-      .post(`${localhost}/shop`, {
+      .post(`${localhost}/cashiers`, {
         name: formData.name,
-        shopOwnerId: formData.shopOwnerId,
-        location: formData.location,
-        // status: formData.status,
+        shopId: formData.shopId,
+        username: formData.username,
+        password: formData.password,
       })
       .then((res) => {
         console.log(res);
         handleFetchData();
         setFormData({
-          shopOwnerId: 0,
+          shopId: 0,
           name: "",
-          location: "",
-          status: "",
+          username: "",
+          password: "",
         });
         setOpen(false);
       })
@@ -115,24 +123,24 @@ const AddShop = ({ open, setOpen, handleFetchData }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add Shop </DialogTitle>
+      <DialogTitle>Add Cashier </DialogTitle>
       <DialogContent>
         {/* Form Fields */}
         <p
           style={{
             margin: "0 5px",
             fontSize: "12px",
-            color: error.shopOwnerId ? "red" : "black",
+            color: error.shopId ? "red" : "black",
           }}
         >
-          Shop Owner
+          Shop
         </p>
         <Select
           fullWidth
           defaultValue={0}
-          onChange={handleChange("shopOwnerId")}
+          onChange={(e) => setFormData({ ...formData, shopId: e.target.value })}
         >
-          <MenuItem value={0}>Choose Owner</MenuItem>
+          <MenuItem value={0}>Choose shop</MenuItem>
           {owner.map((own) => (
             <MenuItem value={own.id}>{own.name}</MenuItem>
           ))}
@@ -146,24 +154,36 @@ const AddShop = ({ open, setOpen, handleFetchData }) => {
           error={error.name}
           onChange={handleChange("name")}
         />
-        {/* <p style={{ margin: "0 5px", fontSize: "12px" }}>status</p>
-        <Select
-          fullWidth
-          defaultValue={"active"}
-          onChange={handleChange("status")}
-        >
-          <MenuItem value={1}>active</MenuItem>
-          <MenuItem value={0}>inactive</MenuItem>
-        </Select> */}
         <TextField
           margin="normal"
-          label="Location"
+          label="Username"
           type="text"
           fullWidth
           variant="outlined"
-          value={formData.location}
-          error={error.location}
-          onChange={handleChange("location")}
+          value={formData.username}
+          error={error.username}
+          onChange={handleChange("username")}
+        />
+        <TextField
+          margin="normal"
+          label="Password"
+          type="password"
+          fullWidth
+          variant="outlined"
+          value={formData.password}
+          error={error.password}
+          onChange={handleChange("password")}
+        />
+        <TextField
+          margin="normal"
+          label="Confirm Password"
+          type="password"
+          fullWidth
+          variant="outlined"
+          value={formData.confirmPassword}
+          error={error.confirmPassword}
+          helperText={error.confirmPassword && error.confirmPassword}
+          onChange={handleChange("confirmPassword")}
         />
       </DialogContent>
       <DialogActions>
@@ -178,4 +198,4 @@ const AddShop = ({ open, setOpen, handleFetchData }) => {
   );
 };
 
-export default AddShop;
+export default AddCashier;

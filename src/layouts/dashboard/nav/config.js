@@ -23,7 +23,7 @@ const navConfig = [
   },
   {
     title: "Manage Cashiers",
-    path: "/dashboard/campaign",
+    path: "/dashboard/manageCashier",
     icon: icon("ic_campaign"),
   },
   {

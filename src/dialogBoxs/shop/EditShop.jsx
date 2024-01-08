@@ -50,8 +50,8 @@ const EditShop = ({ open, setOpen, editItem, handleFetchData }) => {
   }, []);
 
   const [formData, setFormData] = useState({});
-  console.log("initail", editItem);
-  console.log(formData);
+  // console.log("initail", editItem);
+  // console.log(formData);
 
   const [error, setError] = useState({
     name: false,
@@ -60,7 +60,15 @@ const EditShop = ({ open, setOpen, editItem, handleFetchData }) => {
 
   const handleSave = () => {
     // Validate required fields
-    const requiredFields = ["name", "username", "status", "shopOwnerId"];
+    const requiredFields = [
+      "name",
+      "status",
+      "shopOwnerId",
+      "location",
+      "cashierLimit",
+      "maxStake",
+      "minStake",
+    ];
     let isValid = true;
     const newError = {};
 
@@ -79,6 +87,7 @@ const EditShop = ({ open, setOpen, editItem, handleFetchData }) => {
       return;
     }
 
+    console.log("going to axios");
     // Add your logic to handle the form data (e.g., send to an API)
     axios
       .put(`${localhost}/shop/${editItem.id}`, {
@@ -117,7 +126,7 @@ const EditShop = ({ open, setOpen, editItem, handleFetchData }) => {
         {/* Form Fields */}
         <TextField
           margin="normal"
-          label="First Name"
+          label="Name"
           fullWidth
           variant="outlined"
           value={formData.name}
@@ -128,6 +137,7 @@ const EditShop = ({ open, setOpen, editItem, handleFetchData }) => {
         <Select
           fullWidth
           defaultValue={0}
+          value={formData.shopOwnerId}
           onChange={handleChange("shopOwnerId")}
         >
           <MenuItem value={0}>Choose Owner</MenuItem>
@@ -138,7 +148,7 @@ const EditShop = ({ open, setOpen, editItem, handleFetchData }) => {
         <p style={{ margin: "0 5px", fontSize: "12px" }}>status</p>
         <Select
           fullWidth
-          defaultValue={"active"}
+          value={formData.status}
           onChange={handleChange("status")}
         >
           <MenuItem value="active">active</MenuItem>

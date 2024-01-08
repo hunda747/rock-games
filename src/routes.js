@@ -16,6 +16,7 @@ import FundingCampaignPage from "./pages/fundingCampaignsPage";
 import ManageShopOwner from "./pages/Manage/ManageShopOwner";
 import RetailReport from "./pages/Report/RetailReport";
 import ManageShop from "./pages/Manage/ManageShop";
+import ManageCashier from "./pages/Manage/ManageCashier";
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ export default function Router() {
         { path: "app", element: <RetailReport /> },
         { path: "manageShopOwner", element: <ManageShopOwner /> },
         { path: "manageShop", element: <ManageShop /> },
-        { path: "user", element: <UserPage /> },
+        { path: "manageCashier", element: <ManageCashier /> },
         { path: "campaign", element: <CampaignPage /> },
         { path: "fundingCampaign", element: <FundingCampaignPage /> },
         { path: "detail", element: <DetailCampaignPage /> },

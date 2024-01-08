@@ -75,4 +75,37 @@ export const getShop = (state, setState, dispatch, setLoader) => {
     });
 };
 
+export const getCashier = (state, setState, dispatch, setLoader) => {
+  console.log("fetching cashier");
+  setLoader(true);
+  axios
+    .get(
+      `${localhost}/cashiers`,
+      config
+    )
+    .then((res) => {
+      console.log(res);
+      setState(res.data)
+      // dispatch({
+      //   type: "setCampaigns",
+      //   payload: res.data,
+      // });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: "setShowSnackBar",
+        payload: {
+          show: true,
+          message:
+            err?.response?.data?.message || err?.message || "Network Error",
+        },
+      });
+    })
+    .finally(() => {
+      console.log("end");
+      setLoader(false);
+    });
+};
+
 

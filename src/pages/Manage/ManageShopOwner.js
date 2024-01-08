@@ -183,6 +183,7 @@ export default function ManageShopOwner(params) {
       id: row.id,
       name: row.name,
       username: row.username,
+      status: row.status
     })
     setOpenEdit(true);
   }
@@ -242,7 +243,7 @@ export default function ManageShopOwner(params) {
                             id,
                             name,
                             username,
-                            // status,
+                            status,
                           } = row;
 
                           return (
@@ -275,10 +276,11 @@ export default function ManageShopOwner(params) {
                               <TableCell align="left">
                                 <Label
                                   color={
-                                    ('status' === "inactive" && "error") || "success"
+                                    (status && "success") || "error"
                                   }
                                 >
-                                  {sentenceCase('status')}
+                                  {/* {status} */}
+                                  {sentenceCase(status ? 'active' : 'inactive')}
                                 </Label>
                               </TableCell>
 
@@ -303,6 +305,26 @@ export default function ManageShopOwner(params) {
                           );
                         })
                   }
+                  {(filteredUsers.length <= 0 && !loader) && (
+                    <TableRow
+                      style={{
+                        height: '40px',
+                      }}
+                    >
+                      <TableCell
+                        colSpan={8}
+                        align="center"
+                        style={{
+                          height: "paddingHeight",
+                          padding: "40px",
+                          fontSize: "18px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        No Shop owner Found
+                      </TableCell>
+                    </TableRow>
+                  )}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />

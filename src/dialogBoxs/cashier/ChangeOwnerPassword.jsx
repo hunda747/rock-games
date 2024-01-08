@@ -1,37 +1,35 @@
-// EditShopOwner.jsx
-import React, { useEffect, useState } from "react";
+// ChangeOwnerPassword.jsx
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { MenuItem, Select } from "@mui/material";
 import axios from "axios";
 
 const localhost = process.env.REACT_APP_API_URL;
-const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
+
+const ChangeOwnerPassword = ({ open, setOpen, id }) => {
   const handleClose = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    console.log("effect");
-    setFormData(editItem);
-  }, []);
-
-  const [formData, setFormData] = useState({});
-  console.log("initail", editItem);
-  console.log("form", formData);
+  const [formData, setFormData] = useState({
+    // oldpassword: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const [error, setError] = useState({
-    name: false,
-    username: false,
+    // oldpassword: false,
+    password: false,
+    confirmPassword: false,
   });
 
   const handleSave = () => {
-    // Validate required fields
-    const requiredFields = ["name", "username"];
+    // Validate required fields "oldpassword",
+    const requiredFields = ["password", "confirmPassword"];
     let isValid = true;
     const newError = {};
 
@@ -44,28 +42,33 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
       }
     });
 
+    // Validate password and confirm password match
+    if (formData.password !== formData.confirmPassword) {
+      newError.password = true;
+      newError.confirmPassword = "password must match";
+      isValid = false;
+    }
+
     // If there are validation errors, update the state and return
     if (!isValid) {
       setError(newError);
       return;
     }
 
-    // Add your logic to handle the form data (e.g., send to an API)
     axios
-      .put(`${localhost}/shop-owners/${editItem.id}`, {
-        name: formData.name,
-        username: formData.username,
-        status: formData.status || false,
+      .post(`${localhost}/shop-owners/changePassword`, {
+        newPassword: formData.password,
+        id,
       })
       .then((res) => {
         console.log(res);
-        handleFetchData();
         setOpen(false);
       })
       .catch((err) => {
         console.log(err);
       });
 
+    // Add your logic to handle the form data (e.g., send to an API)
     console.log(formData);
     handleClose();
   };
@@ -79,40 +82,29 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Edit Shop Owner</DialogTitle>
+      <DialogTitle>Change Shop Admin Passowrd</DialogTitle>
       <DialogContent>
-        {/* Form Fields */}
         <TextField
           margin="normal"
-          label="Name"
+          label="Password"
+          type="password"
           fullWidth
           variant="outlined"
-          value={formData.name}
-          error={error.name}
-          onChange={handleChange("name")}
+          value={formData.password}
+          error={error.password}
+          onChange={handleChange("password")}
         />
         <TextField
           margin="normal"
-          label="Username"
+          label="Confirm Password"
+          type="password"
           fullWidth
           variant="outlined"
-          value={formData.username}
-          error={error.username}
-          onChange={handleChange("username")}
+          value={formData.confirmPassword}
+          error={error.confirmPassword}
+          helperText={error.confirmPassword && error.confirmPassword}
+          onChange={handleChange("confirmPassword")}
         />
-        <p style={{ margin: "0 5px" }}>status</p>
-        <Select
-          fullWidth
-          defaultValue={"active"}
-          value={formData.status ? 1 : 0}
-          onChange={(e) => {
-            console.log("value", e.target.value);
-            setFormData({ ...formData, status: e.target.value });
-          }}
-        >
-          <MenuItem value={1}>active</MenuItem>
-          <MenuItem value={0}>inactive</MenuItem>
-        </Select>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
@@ -126,4 +118,4 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
   );
 };
 
-export default EditShopOwner;
+export default ChangeOwnerPassword;

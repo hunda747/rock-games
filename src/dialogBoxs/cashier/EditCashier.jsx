@@ -1,4 +1,4 @@
-// EditShopOwner.jsx
+// EditCashier.jsx
 import React, { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -10,10 +10,30 @@ import { MenuItem, Select } from "@mui/material";
 import axios from "axios";
 
 const localhost = process.env.REACT_APP_API_URL;
-const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
+const EditCashier = ({ open, setOpen, editItem, handleFetchData }) => {
+  const [owner, setOwner] = useState([]);
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleFetchShop = () => {
+    axios
+      .get(`${localhost}/cashiers`)
+      .then((res) => {
+        console.log(res);
+        setOwner(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        console.log("end");
+      });
+  };
+
+  useEffect(() => {
+    handleFetchShop();
+  }, []);
 
   useEffect(() => {
     console.log("effect");
@@ -25,13 +45,14 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
   console.log("form", formData);
 
   const [error, setError] = useState({
+    shopId: false,
     name: false,
-    username: false,
+    status: false,
   });
 
   const handleSave = () => {
     // Validate required fields
-    const requiredFields = ["name", "username"];
+    const requiredFields = ["name", "shopId"];
     let isValid = true;
     const newError = {};
 
@@ -52,9 +73,9 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
 
     // Add your logic to handle the form data (e.g., send to an API)
     axios
-      .put(`${localhost}/shop-owners/${editItem.id}`, {
+      .put(`${localhost}/cashiers/${editItem.id}`, {
         name: formData.name,
-        username: formData.username,
+        shopId: formData.shopId,
         status: formData.status || false,
       })
       .then((res) => {
@@ -79,7 +100,7 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Edit Shop Owner</DialogTitle>
+      <DialogTitle>Edit Cashier</DialogTitle>
       <DialogContent>
         {/* Form Fields */}
         <TextField
@@ -91,15 +112,25 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
           error={error.name}
           onChange={handleChange("name")}
         />
-        <TextField
-          margin="normal"
-          label="Username"
+        <p
+          style={{
+            margin: "0 5px",
+            fontSize: "12px",
+            color: error.shopId ? "red" : "black",
+          }}
+        >
+          Shop
+        </p>
+        <Select
           fullWidth
-          variant="outlined"
-          value={formData.username}
-          error={error.username}
-          onChange={handleChange("username")}
-        />
+          defaultValue={0}
+          onChange={(e) => setFormData({ ...formData, shopId: e.target.value })}
+        >
+          <MenuItem value={0}>Choose shop</MenuItem>
+          {owner.map((own) => (
+            <MenuItem value={own.id}>{own.name}</MenuItem>
+          ))}
+        </Select>
         <p style={{ margin: "0 5px" }}>status</p>
         <Select
           fullWidth
@@ -126,4 +157,4 @@ const EditShopOwner = ({ open, setOpen, editItem, handleFetchData }) => {
   );
 };
 
-export default EditShopOwner;
+export default EditCashier;
